@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_rest_passwordreset',
+    'drf_spectacular',
     'backend',
 ]
 
@@ -120,7 +122,7 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'backend.User'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_TLS = True
 
 # EMAIL_HOST = 'smtp.mail.ru'
@@ -133,6 +135,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 40,
 
@@ -156,3 +159,30 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API для автоматизации закупок',
+    'DESCRIPTION': 'Дипломный проект. Управление магазинами, товарами, корзиной и заказами.',
+    'VERSION': '1.0.0',
+    'CONTACT': {'email': 'your-email@example.com'},
+    'LICENSE': {'name': 'MIT License'},
+    'SCHEMA_PATH_PREFIX': '/api/v1',
+}
+
+# Redis cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Baton admin theme
+BATON_THEME = 'default'  # или 'modern', 'dark', 'light'
+BATON_CLASSES = 'baton.themes.ModernTheme'
+BATON = {}
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
